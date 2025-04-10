@@ -2,7 +2,7 @@
   <el-header class="header">
     <div class="header-container">
       <!-- 左侧元素 -->
-      <div class="header-left">
+      <div class="header-left" @click="goHome">
         <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" class="logo-img" />
         <img loading="lazy" alt="" src="@/assets/xiaozhi-ai.png" class="brand-img" />
       </div>
@@ -26,11 +26,17 @@
             :style="{ filter: $route.path === '/user-management' ? 'brightness(0) invert(1)' : 'None' }" />
           用户管理
         </div>
+        <div v-if="isSuperAdmin" class="equipment-management"
+          :class="{ 'active-tab': $route.path === '/params-management' }" @click="goParamManagement">
+          <img loading="lazy" alt="" src="@/assets/header/param_management.png"
+            :style="{ filter: $route.path === '/params-management' ? 'brightness(0) invert(1)' : 'None' }" />
+          参数管理
+        </div>
       </div>
 
       <!-- 右侧元素 -->
       <div class="header-right">
-        <div class="search-container">
+        <div class="search-container" v-if="$route.path === '/home'">
           <el-input v-model="search" placeholder="输入名称搜索.." class="custom-search-input"
             @keyup.enter.native="handleSearch">
             <i slot="suffix" class="el-icon-search search-icon" @click="handleSearch"></i>
@@ -95,6 +101,9 @@ export default {
     },
     goModelConfig() {
       this.$router.push('/model-config')
+    },
+    goParamManagement() {
+      this.$router.push('/params-management')
     },
     // 获取用户信息
     fetchUserInfo() {
