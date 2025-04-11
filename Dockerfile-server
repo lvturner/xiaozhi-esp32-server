@@ -15,8 +15,10 @@ WORKDIR /opt/xiaozhi-esp32-server
 
 # 安装系统依赖
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends libopus0 ffmpeg && \
+    apt-get install -y --no-install-recommends libopus0 ffmpeg pipx && \
     apt-get clean && \
+    pipx install mcp-proxy && \
+    pipx ensurepath && \
     rm -rf /var/lib/apt/lists/*
 
 # 从构建阶段复制Python包和前端构建产物
