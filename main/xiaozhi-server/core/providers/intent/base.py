@@ -12,14 +12,14 @@ class IntentProviderBase(ABC):
         self.intent_options = [
             {
                 "name": "handle_exit_intent",
-                "desc": "结束聊天, 用户发来如再见之类的表示结束的话, 不想再进行对话的时候",
+                "desc": "End conversation, when the user sends messages like goodbye indicating they want to end the chat",
             },
             {
                 "name": "play_music",
-                "desc": "播放音乐, 用户希望你可以播放音乐, 只用于播放音乐的意图",
+                "desc": "Play music, when the user wants you to play music. Only for music playback intent",
             },
-            {"name": "get_time", "desc": "获取今天日期或者当前时间信息"},
-            {"name": "continue_chat", "desc": "继续聊天"},
+            {"name": "get_time", "desc": "Get today's date or current time information"},
+            {"name": "continue_chat", "desc": "Continue chatting"},
         ]
 
     def set_llm(self, llm):

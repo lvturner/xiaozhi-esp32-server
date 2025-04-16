@@ -15,7 +15,7 @@ class IntentProvider(IntentProviderBase):
     def __init__(self, config):
         super().__init__(config)
         self.llm = None
-        self.promot = self.get_intent_system_prompt()
+        self.prompt = self.get_intent_system_prompt()
         # 添加缓存管理
         self.intent_cache = {}  # 缓存意图识别结果
         self.cache_expiry = 600  # 缓存有效期10分钟
@@ -29,43 +29,47 @@ class IntentProvider(IntentProviderBase):
         """
 
         prompt = (
-            "你是一个意图识别助手。请分析用户的最后一句话，判断用户意图属于以下哪一类：\n"
+            "You are an intent recognition assistant. Analyze the user's last sentence and determine which of the following intent categories it belongs to:\n"
             "<start>"
             f"{str(self.intent_options)}"
             "<end>\n"
-            "处理步骤:"
-            "1. 思考意图类型，生成function_call格式"
+            "Processing steps:"
+            "1. Think about the intent type and generate a function_call format"
             "\n\n"
-            "返回格式示例：\n"
-            '1. 播放音乐意图: {"function_call": {"name": "play_music", "arguments": {"song_name": "音乐名称"}}}\n'
-            '2. 结束对话意图: {"function_call": {"name": "handle_exit_intent", "arguments": {"say_goodbye": "goodbye"}}}\n'
-            '3. 获取当天日期时间: {"function_call": {"name": "get_time"}}\n'
-            '4. 继续聊天意图: {"function_call": {"name": "continue_chat"}}\n'
+            "Example return format:\n"
+            '1. Play music intent: {"function_call": {"name": "play_music", "arguments": {"song_name": "song_name"}}}\n'
+            '2. End conversation intent: {"function_call": {"name": "handle_exit_intent", "arguments": {"say_goodbye": "goodbye"}}}\n'
+            '3. Get current date and time: {"function_call": {"name": "get_time"}}\n'
+            '4. Continue chatting intent: {"function_call": {"name": "continue_chat"}}\n'
             "\n"
-            "注意:\n"
-            '- 播放音乐：无歌名时，song_name设为"random"\n'
-            "- 如果没有明显的意图，应按照继续聊天意图处理\n"
-            "- 只返回纯JSON，不要任何其他内容\n"
+            "Notes:\n"
+            '- Play music: If no song name is provided, set song_name to "random"\n'
+            "- If no clear intent is detected, default to the continue chatting intent\n"
+            "- Return only pure JSON, without any additional text\n"
             "\n"
-            "示例分析:\n"
+            "Example analysis:\n"
             "```\n"
-            "用户: 你也太搞笑了\n"
-            '返回: {"function_call": {"name": "continue_chat"}}\n'
-            "```\n"
-            "```\n"
-            "用户: 现在是几号了?现在几点了？\n"
-            '返回: {"function_call": {"name": "get_time"}}\n'
+            "User: You're so funny\n"
+            'Return: {"function_call": {"name": "continue_chat"}}\n'
             "```\n"
             "```\n"
-            "用户: 我们明天再聊吧\n"
-            '返回: {"function_call": {"name": "handle_exit_intent"}}\n'
+            "User: What's the date today? What time is it?\n"
+            'Return: {"function_call": {"name": "get_time"}}\n'
             "```\n"
             "```\n"
-            "用户: 播放中秋月\n"
-            '返回: {"function_call": {"name": "play_music", "arguments": {"song_name": "中秋月"}}}\n'
+            "User: Let's talk again tomorrow\n"
+            'Return: {"function_call": {"name": "handle_exit_intent"}}\n'
             "```\n"
             "```\n"
-            "可用的音乐名称:\n"
+            "User: Play Mid-Autumn Moon\n"
+            'Return: {"function_call": {"name": "play_music", "arguments": {"song_name": "Mid-Autumn Moon"}}}\n'
+            "```\n"
+            "```\n"
+            "Available song names:\n"
+            "```\n"
+            "```\n"
+            "User: Get headlines from hacker news"
+            'Return: {"function_call": {"name": "get_stories", "arguments": {"limit": 10}}}\n'
         )
         return prompt
 
@@ -131,7 +135,7 @@ class IntentProvider(IntentProviderBase):
         user_prompt = f"当前的对话如下：\n{msgStr}"
         music_config = initialize_music_handler(conn)
         music_file_names = music_config["music_file_names"]
-        prompt_music = f"{self.promot}\n<start>{music_file_names}\n<end>"
+        prompt_music = f"{self.prompt}\n<start>{music_file_names}\n<end>"
         logger.bind(tag=TAG).debug(f"User prompt: {prompt_music}")
 
         # 记录预处理完成时间

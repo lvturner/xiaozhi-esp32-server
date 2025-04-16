@@ -72,7 +72,7 @@ class FunctionHandler:
             funcItem = self.get_function(function_name)
             if not funcItem:
                 return ActionResponse(
-                    action=Action.NOTFOUND, result="没有找到对应的函数", response=""
+                    action=Action.NOTFOUND, result="I can't find a function for this", response=""
                 )
             func = funcItem.func
             arguments = function_call_data["arguments"]
@@ -89,7 +89,7 @@ class FunctionHandler:
                 return func(conn, **arguments)
             else:
                 return ActionResponse(
-                    action=Action.NOTFOUND, result="没有找到对应的函数", response=""
+                    action=Action.NOTFOUND, result="I can't find a function for this", response=""
                 )
         except Exception as e:
             logger.bind(tag=TAG).error(f"处理function call错误: {e}")
