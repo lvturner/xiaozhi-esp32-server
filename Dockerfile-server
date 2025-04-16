@@ -19,6 +19,7 @@ RUN apt-get update && \
     apt-get clean && \
     pipx install mcp-proxy && \
     pipx ensurepath && \
+    pipx install uv && \
     rm -rf /var/lib/apt/lists/*
 
 # 从构建阶段复制Python包和前端构建产物
